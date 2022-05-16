@@ -4,9 +4,9 @@ var bodyParser = require('body-parser');
 
 const port = 3000;
 const app = express();
+
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
-
 
 var portfolio = new Portfolio()
 
@@ -17,7 +17,7 @@ app.get("/portfolio", (req, res) => {
 
 // fetch returns
 app.get("/portfolio/returns", (req, res) => {
-    res.status(200).json({ "val": portfolio.fetchReturns() })
+    res.status(200).status(200).json({ "val": portfolio.fetchReturns() })
 })
 
 // load saved data from JSON files
@@ -29,23 +29,23 @@ app.get("/portfolio/load", (req, res) => {
 // save the data into files
 app.get("/portfolio/save", (req, res) => {
     portfolio.writeSecuritiesToJSON()
-    res.json(portfolio.getSecurities)
+    res.status(200).json(portfolio.getSecurities)
 })
 
 // reset to empty trades and securities
 app.get("/portfolio/unload", (req, res) => {
     portfolio = new Portfolio()
-    res.send(portfolio.getSecurities)
+    res.status(200).send(portfolio.getSecurities)
 })
 
 // fetch securities
 app.get("/portfolio/securities", (req, res) => {
-    res.send(portfolio.getSecurities)
+    res.status(200).send(portfolio.getSecurities)
 })
 
 // fetch a specific security
 app.get("/portfolio/securities/:tickerSymbol", (req, res) => {
-    res.json(portfolio.getSecurity(req.params))
+    res.status(200).json(portfolio.getSecurity(req.params))
 })
 
 // add securities
@@ -58,7 +58,7 @@ app.post("/portfolio/securities", (req, res) => {
         return res.status(400).json({ msg: 'Please include a positive and shares and avgBuyPrice' });
     }
     portfolio.addSecurity = params
-    res.json(portfolio.getSecurities);
+    res.status(200).json(portfolio.getSecurities);
 })
 
 // update security
@@ -71,7 +71,7 @@ app.put("/portfolio/securities/", (req, res) => {
         return res.status(400).json({ msg: 'Please include a positive and newShares and newAvgBuyPrice' });
     }
     portfolio.updateSecurity({"tickerSymbol": params.tickerSymbol, "updateObj": params})
-    res.json(portfolio.getSecurities);
+    res.status(200).json(portfolio.getSecurities);
 })
 
 // delete security
@@ -86,12 +86,12 @@ app.delete("/portfolio/securities/:tickerSymbol", (req, res) => {
 
 // fetch all trades
 app.get("/portfolio/trades", (req, res) => {
-    res.send(portfolio.getTrades)
+    res.status(200).send(portfolio.getTrades)
 })
 
 // fetch a specific trade
 app.get("/portfolio/trades/:tradeID", (req, res) => {
-    res.json(portfolio.getTrade(req.params))
+    res.status(200).json(portfolio.getTrade(req.params))
 })
 
 // add new trade
@@ -136,12 +136,12 @@ app.delete("/portfolio/trades/:tradeID", (req, res) => {
         return res.status(400).json({ "msg": 'Please include a tickerSymbol and shares and avgBuyPrice' });
     }
     portfolio.removeTrade(params)
-    res.json(portfolio.getTrades);
+    res.status(200).json(portfolio.getTrades);
 })
 
 
 app.get("/", (req, res) => {
-    res.send("Hello, welcome to trades api...")
+    res.status(200).send("Hello, welcome to trades api...")
 })
 
 app.listen(port, function() {
