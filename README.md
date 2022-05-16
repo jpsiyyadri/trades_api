@@ -81,7 +81,7 @@ Update a security
     }'
 ```
 
-### delete "/portfolio/securities/:tickerSymbol"
+### DELETE "/portfolio/securities/:tickerSymbol"
 Delete a security
 ```
     curl --location --request DELETE '65.1.147.223/portfolio/securities/GODREJIN'
@@ -123,7 +123,7 @@ Update a trade
     }'
 ```
 
-### delete("/portfolio/trades/:tradeID"
+### DELETE("/portfolio/trades/:tradeID"
 Delete a trade
 ```
     curl --location --request DELETE '65.1.147.223/portfolio/trades/TCS_0' \
