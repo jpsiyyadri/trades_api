@@ -1,1 +1,19 @@
-{"securities":[{"tickerSymbol":"TCS","shares":5,"avgBuyPrice":100},{"tickerSymbol":"WIPRO","shares":500,"avgBuyPrice":50}]}
+{
+    "securities": [
+        {
+            "tickerSymbol": "TCS",
+            "shares": 5,
+            "avgBuyPrice": 1833.45
+        },
+        {
+            "tickerSymbol": "WIPRO",
+            "shares": 10,
+            "avgBuyPrice": 319.25
+        },
+        {
+            "tickerSymbol": "GODREJIND",
+            "shares": 2,
+            "avgBuyPrice": 535.00
+        }
+    ]
+}

@@ -110,7 +110,6 @@ class Security {
     }
 
     removeTrade ({ tradeID }) {
-        console.log("in removetrade")
         if (this.trades.length > 0) {
             // get the trade to remove
             var removeTrade = this.trades.filter((obj) => obj.getTradeID == tradeID)
@@ -120,13 +119,12 @@ class Security {
                 removeTrade = removeTrade[0]
                 var shares = removeTrade.getShares
                 if(removeTrade.getTradeType == "BUY"){
-                    console.log("remove trade buy ", this)
                     // reset to old avgBuyPrice
                     this.avgBuyPrice = parseFloat(
                         (
                             (
-                                (this.avgBuyPrice * (this.shares+shares)) - (shares * removeTrade.getPrice)
-                            ) / (this.shares)
+                                (this.avgBuyPrice * (this.shares)) - (shares * removeTrade.getPrice)
+                            ) / (this.shares-shares)
                         ).toFixed(2)
                     )
                     // deduct the purchased shares
