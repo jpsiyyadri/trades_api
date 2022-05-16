@@ -1,18 +1,18 @@
 ## Trades API Doc
 Hosted on AWS EC2 available at http://65.1.147.223
 
-Security will have tickerSymbol, avgBuyPrice, shares as paramaters
-Trade will have tickerSymbol, shares, price, tradeType as parameters
+- Security will have tickerSymbol, avgBuyPrice, shares as paramaters
+- Trade will have tickerSymbol, shares, price, tradeType as parameters
 
-PUT req of security should have a prefix new example: newTickerSymbol, nweAvgBuyPrice, newShares
-PUT req of trade should have a prefix new example: newTickerSymbol, newShares, newPrice, newTradeType
+- PUT req of security should have a prefix new example: newTickerSymbol, nweAvgBuyPrice, newShares
+- PUT req of trade should have a prefix new example: newTickerSymbol, newShares, newPrice, newTradeType
 
-shares: should be a positive number
-price: should be a non negative real number
-tradeType: should be BUY or SELL
+- shares: should be a positive number
+- price: should be a non negative real number
+- tradeType: should be BUY or SELL
 
-400 : for any invalid input paramaters
-200 : for a succesfull request
+- 400 : for any invalid input paramaters
+- 200 : for a succesfull request
 
 ### GET /portfolio
 Fetch aggregated view of securities
