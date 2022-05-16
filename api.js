@@ -100,13 +100,13 @@ app.post("/portfolio/trades", (req, res) => {
     if (!params.tickerSymbol || !params.shares || !params.price  || !params.tradeType) {
         return res.status(400).json({ msg: 'Please include a tickerSymbol and shares and price' });
     }
-    if(parseFloat(params.shares) < 1 || parseFloat(params.price) < 1 || ["BUY", "SELL"].includes(params.tradeType)){
+    if(parseFloat(params.shares) < 1 || parseFloat(params.price) < 1 || !["BUY", "SELL"].includes(params.tradeType)){
         return res.status(400).json({ msg: 'Please include a positive and shares and price tradeType as BUY or SELL' });
     }
 
     var found = portfolio.addTrade(params)
     if(found == -1){
-        return res.status(400).json({ msg: "Invalid tickerSymbol " + params.tickerSymbol})
+        return res.status(400).json({ msg: "Invalid tickerSymbol " + params.tickerSymbol + " or shares are insufficient"})
     }
     res.status(200).json(portfolio.getTrades);
 })

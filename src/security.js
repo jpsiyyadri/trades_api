@@ -98,14 +98,12 @@ class Security {
     }
 
     sellBoughtShares ({ shares, tradeID }) {
-        console.log("in sell bought shares ", shares, this.shares, tradeID)
         if (shares > 0) {
             tradeID = tradeID ? tradeID : this.tickerSymbol + "_" + this.trades.length            
             var newTrade = new Trade(
                 tradeID, shares, this.avgBuyPrice, "SELL"
             )
             this.trades.push(newTrade)
-            console.log("out sell bought shares ", this.trades)
             return 1
         }
         return -1;
@@ -117,7 +115,6 @@ class Security {
             // get the trade to remove
             var removeTrade = this.trades.filter((obj) => obj.getTradeID == tradeID)
             // remove it from all trades of that security
-            console.log(tradeID)
             this.trades = this.trades.filter((obj) => obj.getTradeID != tradeID)
             if(removeTrade.length > 0){
                 removeTrade = removeTrade[0]
@@ -139,7 +136,6 @@ class Security {
                     // add the sold shares back
                     this.shares += shares
                 }
-                console.log("out removetrade ", this)
                 return 1
             }
         }

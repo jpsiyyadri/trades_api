@@ -98,6 +98,13 @@ class Portfolio {
         this.securities.push(newSecurity)
     }
 
+    updateAllTrades(){
+        this.pf_trades = []
+        this.securities.forEach((d) => {
+            this.pf_trades = this.pf_trades.concat(d.getSecTrades)
+        })
+    }
+
     addTrade ({ tickerSymbol, shares, tradeType, price }) {
         /*
             validate whether the security exists or not
@@ -111,18 +118,19 @@ class Portfolio {
         */
         var findSecurity = this.getSecurity({"tickerSymbol" :tickerSymbol})
         if(findSecurity.length){
-            var newTrade = null;
+            var newTrade = -1;
             if(tradeType == "SELL") {
                 newTrade = findSecurity[0].sellShares({ "shares": shares })
             }
             if (tradeType == "BUY") { 
                 newTrade = findSecurity[0].buyShares({ "shares": shares, "price": price })
             }
-            this.pf_trades.push(newTrade)
-            return 1
-        } else {
-            return -1
+            if(newTrade == 1) {
+                this.updateAllTrades()
+                return 1
+            }
         }
+        return -1
     }
 
     removeSecurity({ tickerSymbol }) {
