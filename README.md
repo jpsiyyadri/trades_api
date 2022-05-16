@@ -11,7 +11,7 @@ Hosted on AWS EC2 available at http://65.1.147.223
 - price: should be a non negative real number
 - tradeType: should be BUY or SELL
 
-- 400 : for any invalid input paramaters
+- 400 (Bad request): for any invalid input paramaters
 - 200 : for a succesfull request
 
 ### GET /portfolio
@@ -81,7 +81,7 @@ Update a security
     }'
 ```
 
-### delete "/portfolio/securities/:tickerSymbol"
+### DELETE "/portfolio/securities/:tickerSymbol"
 Delete a security
 ```
     curl --location --request DELETE '65.1.147.223/portfolio/securities/GODREJIN'
@@ -123,7 +123,7 @@ Update a trade
     }'
 ```
 
-### delete("/portfolio/trades/:tradeID"
+### DELETE("/portfolio/trades/:tradeID"
 Delete a trade
 ```
     curl --location --request DELETE '65.1.147.223/portfolio/trades/TCS_0' \
