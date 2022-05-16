@@ -1,0 +1,22 @@
+{
+  "name": "trades_api",
+  "version": "1.0.0",
+  "description": "A portfolio tracking API needs to be implemented which allows adding/deleting/updating trades and can do basic return calculations etc.",
+  "main": "api.js",
+  "scripts": {
+    "test": "mocha",
+    "start": "nodemon api.js"
+  },
+  "author": "Jai Prakash",
+  "license": "ISC",
+  "devDependencies": {
+    "chai": "^4.3.6",
+    "mocha": "^10.0.0",
+    "nodemon": "^2.0.16"
+  },
+  "dependencies": {
+    "body-parser": "^1.20.0",
+    "express": "^4.18.1",
+    "markdown-it": "^13.0.1"
+  }
+}
