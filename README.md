@@ -11,7 +11,7 @@ Hosted on AWS EC2 available at http://65.1.147.223
 - price: should be a non negative real number
 - tradeType: should be BUY or SELL
 
-- 400 : for any invalid input paramaters
+- 400 (Bad request): for any invalid input paramaters
 - 200 : for a succesfull request
 
 ### GET /portfolio
