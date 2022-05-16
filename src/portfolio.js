@@ -9,6 +9,9 @@ class Portfolio {
     }
 
     writeSecuritiesToJSON() {
+        /*
+            save the data into files
+        */
         var all_securities = []
         var all_trades = []
 
@@ -36,6 +39,7 @@ class Portfolio {
     loadSecuritiesFromJSON() {
         /*
             load securities and trades from data files
+            keep a reference this.pf_trades to access anytime
         */
         var all_securities = JSON.parse(
                 fs.readFileSync("data/securities.json", 'utf-8')
@@ -177,7 +181,8 @@ class Portfolio {
             var tickerSymbol = tradeID.split("_")[0]
             var findSecurity = this.getSecurity({"tickerSymbol" :tickerSymbol})
             console.log("jp", findSecurity)
-            if(findSecurity.length && findSecurity[0].updateSecTrade(tradeID, updateObj) == 1){
+            var updated = findSecurity[0].updateSecTrade(tradeID, updateObj)
+            if(findSecurity.length && updated == 1){
                 //  update the current list
                 console.log("great", this.pf_trades, tradeID)
                 var updtdTrade = findSecurity[0].findSecTrades({"tradeID": tradeID})
@@ -188,6 +193,8 @@ class Portfolio {
                     return 1
                 }
             }
+            console.log("out update Trade", updated)
+            return updated
         }
         return -1
     }

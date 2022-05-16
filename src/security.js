@@ -34,8 +34,13 @@ class Security {
         return this.trades;
     }
 
+    getTrade (tradeID) {        
+        var found = this.trades.find((obj) => obj.getTradeID == tradeID)
+        if(found) return [found]
+        else return []
+    }
+
     findSecTrades({ tradeID }) {
-        console.log("findSecTrades", this.trades)
         var found = this.trades.find((obj) => obj.getTradeID == tradeID)
         if(found) return [found]
         else return []
@@ -61,11 +66,17 @@ class Security {
         return 1;
     }
 
+    // create a new trade and add it to that security trades
     addTrade (tradeID, shares, price, tradeType) {
         this.trades.push(new Trade(tradeID, shares, price, tradeType))
     }
 
+    // buy shares with a trade
     buyShares ({ shares, price, tradeID }) {
+        /*
+            update avgBuyPrice using the formula
+            add the shares to this.shares
+        */
         if (shares <= 0 || price < 0 ) return -1
         this.avgBuyPrice = parseFloat(
             (
@@ -75,41 +86,41 @@ class Security {
             ).toFixed(2)
         )
         this.shares += shares;
-        console.log(tradeID, ">>>")
         tradeID = tradeID ? tradeID : this.tickerSymbol + "_" + this.trades.length            
-        var newTrade = new Trade(tradeID, shares, price, "BUY")
-        this.trades.push(newTrade)
+        this.addTrade(tradeID, shares, price, "BUY")
         return 1;
     }
 
+    // sell shares with trade
     sellShares ({ shares, tradeID }) {
-        console.log("in sell shares ", shares, this.shares, tradeID)
+        /*
+            if security has the shares asked to be sold
+                - subtract the shares from this.shares
+                - return 1
+            else
+                return -1
+        */
         if (shares > 0 && this.shares >= shares) {
             this.shares -= shares;
             tradeID = tradeID ? tradeID : this.tickerSymbol + "_" + this.trades.length            
-            var newTrade = new Trade(
+            this.addTrade(
                 tradeID, shares, this.avgBuyPrice, "SELL"
             )
-            this.trades.push(newTrade)
-            console.log("out sell ", this.trades)
             return 1
         }
         return -1;
     }
 
-    sellBoughtShares ({ shares, tradeID }) {
-        if (shares > 0) {
-            tradeID = tradeID ? tradeID : this.tickerSymbol + "_" + this.trades.length            
-            var newTrade = new Trade(
-                tradeID, shares, this.avgBuyPrice, "SELL"
-            )
-            this.trades.push(newTrade)
-            return 1
-        }
-        return -1;
-    }
-
+    // remove a trade from security
     removeTrade ({ tradeID }) {
+        /*
+            Remove trade
+                if tradeType == BUY
+                    - add the shares in that trade to this.shares
+                    - revert the avgBuyPrice by using the formula
+                if tradeType == SELL
+                    - subtract the shares in that trade from this.shares
+        */
         if (this.trades.length > 0) {
             // get the trade to remove
             var removeTrade = this.trades.filter((obj) => obj.getTradeID == tradeID)
@@ -134,34 +145,36 @@ class Security {
                     // add the sold shares back
                     this.shares += shares
                 }
-                return 1
+                return {"status": 1, "removedTrade": removeTrade} 
             }
         }
-        return -1
+        return {"status": -1, "removedTrade": null}
     }
 
-    getTrade (tradeID) {        
-        var found = this.trades.find((obj) => obj.getTradeID == tradeID)
-        if(found) return [found]
-        else return []
-    }
-
+    // update trade in a security
     updateSecTrade ( tradeID, updateObj ) {
         var findTradeID = this.getTrade(tradeID)
         if(findTradeID.length) {
             updateObj["tradeID"] = tradeID
             var tradeType = updateObj["newTradeType"] || findTradeID[0].tradeType
-            var removed = this.removeTrade({"tradeID": tradeID})
-            if(removed == 1 && "newTradeType" in updateObj || "newShares" in updateObj || "newPrice" in updateObj){
-                updateObj["shares"] = updateObj["newShares"] || findTradeID[0]["shares"]
-                updateObj["price"] = updateObj["newPrice"] || findTradeID[0]["shares"]
+            var {status, removedObj} = this.removeTrade({"tradeID": tradeID})
+            updateObj["shares"] = updateObj["newShares"] || findTradeID[0]["shares"]
+            updateObj["price"] = updateObj["newPrice"] || findTradeID[0]["price"]
+            if(status == 1 && ("newTradeType" in updateObj || "newShares" in updateObj || "newPrice" in updateObj)){
                 var updated = -1
                 if(tradeType == "BUY") {
                     updated = this.buyShares(updateObj)
+                    if(updated != 1){
+                        this.trades.push(removedObj)
+                        return -102
+                    }
                 }
                 if(tradeType == "SELL") {
-                    console.log(tradeType, updated)
-                    updated = this.sellBoughtShares(updateObj)
+                    updated = this.sellShares(updateObj)
+                    if(updated != 1){
+                        this.trades.push(removedObj)
+                        return -101
+                    }
                 }
                 return updated;
             }
@@ -169,6 +182,7 @@ class Security {
         return -1
     }
 
+    // update security
     update( updateObj ) {
         if(updateObj.newShares) {
             this.shares = updateObj["newShares"]

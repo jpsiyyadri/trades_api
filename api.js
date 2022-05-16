@@ -118,14 +118,25 @@ app.put("/portfolio/trades", (req, res) => {
         return res.status(400).json({ msg: 'Please include a tradeID' });
     }
     if((params.newShares && parseFloat(params.newShares) < 1) || (params.newPrice && parseFloat(params.newPrice) < 1) || 
-        (params.newTradeType && ["BUY", "SELL"].includes(params.newTradeType))){
+        (params.newTradeType && !["BUY", "SELL"].includes(params.newTradeType))){
         return res.status(400).json({ msg: 'Please include a positive and shares and price tradeType as BUY or SELL' });
+    }
+    if(portfolio.getTrades.length == 0) {
+        return res.status(400).json({ msg: 'There are no trades to update' });
+    }
+    if(portfolio.getTrade(params).length == 0) {
+        return res.status(400).json({ msg: 'Invalid tradeID ', tradeID });
     }
     var updated = portfolio.updateTrade({"tradeID": params.tradeID, "updateObj": params})
     if(updated == -1){
         return res.status(400).json({"msg": "Invalid input parameters"})
     }
-    console.log("api.js > ", portfolio.getTrades)
+    if(updated == -101){
+        return res.status(400).json({"msg": "Unable to modify the trade as security has no sufficient trades to sell"})
+    }
+    if(updated == -102){
+        return res.status(400).json({"msg": "Unable to modify the trade"})
+    }
     res.status(200).json(portfolio.getTrades);
 })
 
